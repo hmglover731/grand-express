@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Grand Express: Station Monitor</title>
     <style>
-        /* This makes it look like a sleek train car monitor */
         body { 
             background: #1a1a1a; 
             color: #d4a017; 
@@ -13,14 +12,13 @@
             padding: 20px; 
         }
         .monitor-frame {
-            width: 85%;
-            max-width: 800px;
-            height: 500px;
+            width: 90%;
+            max-width: 900px;
+            height: 550px;
             margin: 30px auto;
             border: 8px solid #333;
-            border-bottom: 15px solid #222; /* "Shelf" look */
+            border-bottom: 15px solid #222;
             border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             background: #000;
             overflow: hidden;
             display: none; 
@@ -35,23 +33,37 @@
             font-weight: bold; 
             cursor: pointer; 
             border-radius: 50px;
-            transition: 0.3s;
         }
-        button:hover { background: #ffcc33; transform: scale(1.05); }
+        #fail-safe { display: none; margin-top: 10px; color: yellow; }
     </style>
 </head>
 <body>
 
     <h1>GRAND EXPRESS ITINERARY</h1>
-    <p>Now Approaching: <strong>Test Station</strong></p>
+    <p>Station: <strong>t7tB6X</strong></p>
     
-    <button onclick="document.getElementById('monitor').style.display='block'">VIEW STATION PHOTOS</button>
+    <button onclick="igniteMonitor()">ARRIVE AT STATION</button>
 
     <div id="monitor" class="monitor-frame">
-        <iframe src="https://www.theglovers.com/frame/slideshow?key=t7tB6X&autoStart=1&captions=0&navigation=0&playButton=0&randomize=1&speed=3&transition=fade"></iframe>
+        <iframe id="itinerary-window" src=""></iframe>
     </div>
 
-    <p style="margin-top:20px; color:#555;"><i>Mechanical Handshake: Confirmed via Custom Domain</i></p>
+    <div id="fail-safe">
+        Monitor not loading? <a href="https://www.theglovers.com/frame/slideshow?key=t7tB6X" target="_blank" style="color:yellow;">Click here to open the itinerary manually.</a>
+    </div>
 
+    <script>
+        function igniteMonitor() {
+            const frame = document.getElementById('itinerary-window');
+            const monitor = document.getElementById('monitor');
+            const failSafe = document.getElementById('fail-safe');
+            
+            // Setting the URL manually to ensure it refreshes
+            frame.src = "https://www.theglovers.com/frame/slideshow?key=t7tB6X&autoStart=1&randomize=1";
+            
+            monitor.style.display = 'block';
+            failSafe.style.display = 'block';
+        }
+    </script>
 </body>
 </html>
