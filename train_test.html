@@ -7,8 +7,8 @@
         body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
         #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
         img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; border: 2px solid #d4a017; background: #222; }
-        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; border: none; font-weight: bold; }
-        #status { margin: 20px; color: #888; }
+        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; border: none; font-weight: bold; color: black; border-radius: 5px; }
+        #status { margin: 20px; color: #888; font-style: italic; }
     </style>
 </head>
 <body>
@@ -28,7 +28,7 @@
             status.innerHTML = "Crossing the Bridge to SmugMug...";
             gallery.innerHTML = "";
 
-            // We use 'allorigins' - a free, reliable bridge that fixes 'ERR_BLOCKED_BY_ORB'
+            // This bridge (AllOrigins) fixes the 'ERR_BLOCKED_BY_ORB' error
             const smugmugUrl = `https://api.smugmug.com/api/v2/album/${ALBUM}!images?APIKey=${API_KEY}`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(smugmugUrl)}`;
 
@@ -37,7 +37,8 @@
                 if (!response.ok) throw new Error("Proxy connection failed.");
                 
                 const wrapper = await response.json();
-                const data = JSON.parse(wrapper.contents); // AllOrigins wraps the result in a 'contents' string
+                // AllOrigins wraps the SmugMug data inside a 'contents' string
+                const data = JSON.parse(wrapper.contents); 
 
                 if (data.Response && data.Response.AlbumImage) {
                     const images = data.Response.AlbumImage;
@@ -45,17 +46,17 @@
                     
                     images.slice(0, 6).forEach(img => {
                         const i = document.createElement('img');
-                        // Factual Fallback: Use the medium sized image
+                        // Using Medium size for reliability
                         i.src = img.ImageSizeMedium || img.ArchivedUri || img.Uri;
                         gallery.appendChild(i);
                     });
-                    status.innerHTML = "Arrival Complete!";
+                    status.innerHTML = "Arrival Complete! The Engine is running.";
                 } else {
-                    status.innerHTML = "Connected, but no images found.";
+                    status.innerHTML = "Connected, but no images found in this album.";
                 }
             } catch (err) {
                 console.error(err);
-                status.innerHTML = "Proxy Error. Check console (F12).";
+                status.innerHTML = "Bridge Error. Check console (F12).";
             }
         }
     </script>
