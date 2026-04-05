@@ -1,12 +1,14 @@
 [
   { 
-    "name": "San Francisco", 
+    "name": "New York City",
+    "date": "August 7, 2007", 
     "key": "t7tB6X", 
-    "bg": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=2000&auto=format&fit=crop" 
+    "bg": "https://www.theglovers.com/Travel/Vacations/2007/New-York-2007/i-4JvSKmn/A?q=80&w=2000&auto=format&fit=crop" 
   },
   { 
-    "name": "Hawaii", 
-    "key": "YOUR_HAWAII_KEY", 
-    "bg": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop" 
+    "name": "Philadelphia",
+    "date": "April 4, 2010", 
+    "key": "Zxw6k8", 
+    "bg": "https://www.theglovers.com/Travel/Vacations/2010/Philadelphia-2010/i-5h7HD4D/A?q=80&w=2000&auto=format&fit=crop" 
   }
 ]
