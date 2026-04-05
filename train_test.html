@@ -6,14 +6,14 @@
     <style>
         body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
         #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
-        img { width: 100%; height: 200px; object-fit: cover; border: 2px solid #d4a017; border-radius: 10px; }
-        button { padding: 20px; font-size: 20px; background: #d4a017; font-weight: bold; cursor: pointer; color: black; border: none; }
-        #status { margin: 20px; color: #888; }
+        img { width: 100%; height: 200px; object-fit: cover; border: 2px solid #d4a017; border-radius: 10px; background: #222; }
+        button { padding: 20px; font-size: 20px; background: #d4a017; font-weight: bold; cursor: pointer; color: black; border: none; border-radius: 5px; }
+        #status { margin: 20px; color: #888; font-style: italic; }
     </style>
 </head>
 <body>
 
-    <h1>Grand Express: Industrial Test</h1>
+    <h1>The Grand Express</h1>
     <button onclick="loadImages()">ARRIVE AT STATION</button>
     <div id="status">Ready.</div>
     <div id="gallery"></div>
@@ -28,7 +28,7 @@
             status.innerHTML = "Opening the industrial bridge...";
             gallery.innerHTML = "";
 
-            // This is the most powerful bridge available
+            // This bridge is the most powerful bypass for browser security
             const proxy = 'https://cors-anywhere.herokuapp.com/';
             const target = `https://api.smugmug.com/api/v2/album/${ALBUM}!images?APIKey=${KEY}`;
 
@@ -37,15 +37,20 @@
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 });
 
-                if (!response.ok) throw new Error("Bridge denied access. Did you click the 'Request Access' link?");
+                if (!response.ok) throw new Error("Bridge denied access.");
 
                 const data = await response.json();
                 const images = data.Response.AlbumImage;
 
+                if (!images) {
+                    status.innerHTML = "Connected, but album appears empty. Check SmugMug Privacy.";
+                    return;
+                }
+
                 images.sort(() => 0.5 - Math.random());
                 images.slice(0, 6).forEach(img => {
                     const i = document.createElement('img');
-                    // We use the direct web link SmugMug provides
+                    // We use the direct web link provided by SmugMug
                     i.src = img.ArchivedUri || img.Uri;
                     gallery.appendChild(i);
                 });
