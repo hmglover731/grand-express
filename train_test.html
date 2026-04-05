@@ -2,48 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grand Express: JSONP ONLY</title>
+    <title>Grand Express: Proxy Engine</title>
     <style>
         body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
-        #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        img { width: 100%; height: 200px; object-fit: cover; border: 2px solid #d4a017; border-radius: 10px; }
-        button { padding: 20px; font-size: 20px; background: #d4a017; font-weight: bold; cursor: pointer; }
+        #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+        img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; border: 2px solid #d4a017; background: #222; }
+        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; border: none; font-weight: bold; }
+        #status { margin: 20px; color: #888; }
     </style>
 </head>
 <body>
 
-    <h1>FINAL ENGINE TEST (JSONP)</h1>
-    <button onclick="triggerJsonpLoad()">CLICK TO LOAD IMAGES</button>
-    <div id="status">Waiting for click...</div>
+    <h1>Grand Express: Proxy Test</h1>
+    <button onclick="loadWithProxy()">Arrive at Station</button>
+    <div id="status">Ready.</div>
     <div id="gallery"></div>
 
     <script>
-        // FACTUAL CHECK: No 'fetch' or 'arriveAtStation' exists in this script.
-        const MY_KEY = 'RbBLZqzrMNpqhXhJnHGFQpPzHDGTzS9h';
-        const MY_ALBUM = 't7tB6X';
+        const API_KEY = 'RbBLZqzrMNpqhXhJnHGFQpPzHDGTzS9h';
+        const ALBUM = 't7tB6X';
 
-        function triggerJsonpLoad() {
-            document.getElementById('status').innerHTML = "Connecting via Script Tag...";
-            
-            const script = document.createElement('script');
-            // This is the JSONP 'Backdoor'
-            script.src = `https://api.smugmug.com/api/v2/album/${MY_ALBUM}!images?APIKey=${MY_KEY}&_jsonp=receiveSmugMugData`;
-            document.head.appendChild(script);
-        }
-
-        window.receiveSmugMugData = function(data) {
-            console.log("Success! Data is here.");
+        async function loadWithProxy() {
+            const status = document.getElementById('status');
             const gallery = document.getElementById('gallery');
-            const images = data.Response.AlbumImage;
-
+            status.innerHTML = "Crossing the Bridge to SmugMug...";
             gallery.innerHTML = "";
-            images.slice(0, 6).forEach(img => {
-                const i = document.createElement('img');
-                i.src = img.ArchivedUri || img.Uri;
-                gallery.appendChild(i);
-            });
-            document.getElementById('status').innerHTML = "Images loaded successfully.";
-        };
+
+            // We use 'allorigins' - a free, reliable bridge that fixes 'ERR_BLOCKED_BY_ORB'
+            const smugmugUrl = `https://api.smugmug.com/api/v2/album/${ALBUM}!images?APIKey=${API_KEY}`;
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(smugmugUrl)}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error("Proxy connection failed.");
+                
+                const wrapper = await response.json();
+                const data = JSON.parse(wrapper.contents); // AllOrigins wraps the result in a 'contents' string
+
+                if (data.Response && data.Response.AlbumImage) {
+                    const images = data.Response.AlbumImage;
+                    images.sort(() => 0.5 - Math.random());
+                    
+                    images.slice(0, 6).forEach(img => {
+                        const i = document.createElement('img');
+                        // Factual Fallback: Use the medium sized image
+                        i.src = img.ImageSizeMedium || img.ArchivedUri || img.Uri;
+                        gallery.appendChild(i);
+                    });
+                    status.innerHTML = "Arrival Complete!";
+                } else {
+                    status.innerHTML = "Connected, but no images found.";
+                }
+            } catch (err) {
+                console.error(err);
+                status.innerHTML = "Proxy Error. Check console (F12).";
+            }
+        }
     </script>
 </body>
 </html>
