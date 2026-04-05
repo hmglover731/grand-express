@@ -6,104 +6,104 @@
     <style>
         :root { 
             --brass: #d4a017; 
-            --mahogany: #3d251e; 
-            --deep-wood: #2a1814;
+            --mahogany: #2a1814; 
+            --deep-wood: #1a0f0d;
             --curtain: #7a0000;
         }
         
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: 'Georgia', serif; }
 
-        /* LAYER 1: THE SCENERY */
+        /* LAYER 1: THE SCENERY (Furthest Back) */
         #main-background {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-size: cover; background-position: center;
             transition: background-image 3s ease-in-out; z-index: 1;
         }
 
-        /* LAYER 2: THE WINDOW (Punched through the wall) */
+        /* LAYER 2: THE WINDOW (Punched through) */
         .window-viewport {
             position: absolute; 
-            top: 18%; left: 10%; width: 80%; height: 55%;
+            top: 15%; left: 12%; width: 76%; height: 58%;
             z-index: 5; background: #000;
-            border: 15px solid var(--deep-wood);
-            outline: 3px solid var(--brass);
-            box-shadow: inset 0 0 40px #000, 0 0 50px rgba(0,0,0,0.9);
-            border-radius: 10px;
+            border: 12px solid var(--deep-wood);
+            outline: 2px solid var(--brass);
+            box-shadow: inset 0 0 50px #000, 0 10px 60px rgba(0,0,0,1);
+            border-radius: 5px;
             overflow: hidden;
         }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* LAYER 3: THE CABIN WALLS */
-        .cabin-wall {
+        /* LAYER 3: THE CABIN INTERIOR WALLS (Lighting & Shadow) */
+        .cabin-interior {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; pointer-events: none;
-            /* Creating the 'Room' look with a big frame */
-            border-left: 10vw solid var(--mahogany);
-            border-right: 10vw solid var(--mahogany);
-            border-top: 18vh solid var(--mahogany);
-            border-bottom: 27vh solid var(--deep-wood);
-            box-sizing: border-box;
-            box-shadow: inset 0 0 200px #000;
+            background: radial-gradient(circle at 50% 45%, transparent 30%, rgba(0,0,0,0.8) 100%), 
+                        linear-gradient(to bottom, var(--mahogany) 0%, var(--deep-wood) 100%);
         }
 
-        /* LAYER 4: THE PLEATED CURTAINS */
+        /* LAYER 4: THE CURTAINS (Now properly scaled) */
         .curtain {
-            position: fixed; top: 10vh; width: 12vw; height: 75vh;
+            position: fixed; top: 0; bottom: 25%; width: 14vw;
             z-index: 15;
-            background: repeating-linear-gradient(90deg, var(--curtain), #500 20%, var(--curtain) 40%);
-            border-bottom: 5px solid var(--brass);
-            box-shadow: 10px 0 30px #000;
+            background: repeating-linear-gradient(90deg, #600, #800 15%, #500 30%);
+            border-right: 3px solid var(--brass);
+            box-shadow: 15px 0 30px rgba(0,0,0,0.7);
         }
-        .curtain-left { left: 5vw; border-radius: 0 40px 100px 0; }
-        .curtain-right { right: 5vw; border-radius: 40px 0 0 100px; }
+        .curtain-left { left: 0; border-radius: 0 0 100% 0; }
+        .curtain-right { right: 0; border-radius: 0 0 0 100%; transform: scaleX(-1); }
 
-        /* TEXT PANEL */
-        .info-header {
-            position: fixed; top: 4vh; width: 100%; text-align: center;
-            color: var(--brass); text-shadow: 3px 3px 10px #000; z-index: 20;
+        /* HEADER */
+        .header {
+            position: fixed; top: 3vh; width: 100%; text-align: center;
+            color: var(--brass); text-shadow: 0 0 15px #000; z-index: 20;
         }
         #station-display { font-size: 3.5rem; margin: 0; letter-spacing: 12px; text-transform: uppercase; font-weight: bold; }
-        #date-display { font-size: 1.5rem; opacity: 0.9; letter-spacing: 4px; margin-top: 5px; }
+        #date-display { font-size: 1.4rem; letter-spacing: 3px; color: #fff; opacity: 0.8; margin-top: 5px; }
 
-        /* THE BRASS DASHBOARD CONTROLS */
-        .dashboard { 
-            position: fixed; bottom: 8vh; left: 50%;
-            transform: translateX(-50%);
-            display: flex; gap: 30px; z-index: 30; 
+        /* THE BRASS CONTROL DASHBOARD */
+        .footer {
+            position: fixed; bottom: 0; width: 100%; height: 25%;
+            background: linear-gradient(to bottom, #221100, #000);
+            border-top: 5px solid var(--mahogany);
+            z-index: 10; display: flex; align-items: center; justify-content: center;
         }
+        .controls { display: flex; gap: 40px; z-index: 30; }
+        
         button { 
-            background: linear-gradient(to bottom, #d4a017, #8a680e); 
-            color: #201000; border: 2px solid #3d251e; 
-            padding: 15px 40px; font-weight: bold; cursor: pointer; border-radius: 8px; 
-            font-family: 'Georgia', serif; text-transform: uppercase;
-            box-shadow: 0 4px 0 #5e460a, 0 10px 20px rgba(0,0,0,0.5);
-            transition: 0.2s;
+            background: linear-gradient(180deg, #e5b32a 0%, #8a680e 100%);
+            color: #1a0f0d; border: 1px solid #444; 
+            padding: 18px 45px; font-weight: bold; cursor: pointer; border-radius: 3px; 
+            font-family: 'Georgia', serif; text-transform: uppercase; font-size: 1rem;
+            box-shadow: 0 5px 0 #5e460a, 0 10px 20px rgba(0,0,0,0.6);
+            transition: 0.1s;
         }
-        button:hover { background: #fff; transform: translateY(-2px); }
-        button:active { transform: translateY(4px); box-shadow: none; }
+        button:hover { filter: brightness(1.1); }
+        button:active { transform: translateY(4px); box-shadow: 0 1px 0 #5e460a; }
     </style>
 </head>
 <body>
 
     <div id="main-background"></div>
+    <div class="cabin-interior"></div>
     
     <div class="window-viewport">
         <iframe id="smugmug-frame" src=""></iframe>
     </div>
 
-    <div class="cabin-wall"></div>
     <div class="curtain curtain-left"></div>
     <div class="curtain curtain-right"></div>
 
-    <div class="info-header">
+    <div class="header">
         <h1 id="station-display">BOARDING...</h1>
-        <div id="date-display">CONSULTING MANIFEST</div>
+        <div id="date-display">MANAGING MANIFEST</div>
     </div>
 
-    <div class="dashboard">
-        <button onclick="navigate(-1)">PREVIOUS</button>
-        <button onclick="handleAudio()">🔊 SOUND</button>
-        <button onclick="navigate(1)">NEXT</button>
+    <div class="footer">
+        <div class="controls">
+            <button onclick="navigate(-1)">PREVIOUS</button>
+            <button onclick="handleAudio()">🔊 SOUND</button>
+            <button onclick="navigate(1)">NEXT</button>
+        </div>
     </div>
 
     <audio id="ambient-noise" loop>
@@ -113,7 +113,7 @@
     <script>
         let route = [];
         let cursor = 0;
-        let driveTimer;
+        let timer;
         const player = document.getElementById('ambient-noise');
 
         fetch('stations.json?nocache=' + Date.now())
@@ -121,7 +121,7 @@
             .then(data => { 
                 route = data; 
                 render(); 
-                startDrive();
+                startTimer();
             });
 
         function render() {
@@ -129,24 +129,19 @@
             const s = route[cursor];
             document.getElementById('station-display').innerText = s.name;
             document.getElementById('date-display').innerText = s.date;
-            
-            // Set Scenery Background
-            const bg = document.getElementById('main-background');
-            bg.style.backgroundImage = `url('${s.bg}')`;
-            
-            // Set Window Contents
+            document.getElementById('main-background').style.backgroundImage = `url('${s.bg}')`;
             document.getElementById('smugmug-frame').src = `https://www.theglovers.com/frame/slideshow?key=${s.key}&autoStart=1&randomize=1&speed=5`;
         }
 
-        function startDrive() {
-            if (driveTimer) clearInterval(driveTimer);
-            driveTimer = setInterval(() => navigate(1), 30000);
+        function startTimer() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => navigate(1), 30000);
         }
 
         function navigate(n) {
             cursor = (cursor + n + route.length) % route.length;
             render();
-            startDrive();
+            startTimer();
         }
 
         function handleAudio() {
