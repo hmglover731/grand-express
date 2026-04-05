@@ -2,50 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grand Express: The Final Station</title>
+    <title>Grand Express: Station Monitor</title>
     <style>
-        body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
-        .slideshow-container { 
-            width: 80%; 
-            max-width: 900px; 
-            height: 500px; 
-            margin: 20px auto; 
-            border: 4px solid #d4a017; 
-            border-radius: 15px; 
-            overflow: hidden; 
+        /* This makes it look like a sleek train car monitor */
+        body { 
+            background: #1a1a1a; 
+            color: #d4a017; 
+            font-family: 'Georgia', serif; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        .monitor-frame {
+            width: 85%;
+            max-width: 800px;
+            height: 500px;
+            margin: 30px auto;
+            border: 8px solid #333;
+            border-bottom: 15px solid #222; /* "Shelf" look */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             background: #000;
+            overflow: hidden;
+            display: none; 
         }
         iframe { width: 100%; height: 100%; border: none; }
-        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; border: none; font-weight: bold; color: black; border-radius: 5px; }
-        #status { margin: 10px; color: #888; }
+        button { 
+            padding: 15px 40px; 
+            font-size: 1.2rem; 
+            background: #d4a017; 
+            color: black;
+            border: none;
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 50px;
+            transition: 0.3s;
+        }
+        button:hover { background: #ffcc33; transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-    <h1>The Grand Express</h1>
-    <p>Station: <strong>t7tB6X</strong></p>
-    <button onclick="arriveAtStation()">ARRIVE AT STATION</button>
+    <h1>GRAND EXPRESS ITINERARY</h1>
+    <p>Now Approaching: <strong>Test Station</strong></p>
     
-    <div id="status">Ready.</div>
-    <div id="engine-room" class="slideshow-container" style="display:none;">
-        </div>
+    <button onclick="document.getElementById('monitor').style.display='block'">VIEW STATION PHOTOS</button>
 
-    <script>
-        function arriveAtStation() {
-            const status = document.getElementById('status');
-            const engineRoom = document.getElementById('engine-room');
-            
-            status.innerHTML = "Pulling into the station...";
-            
-            // We use your custom domain here! 
-            // We are using the 'Embed' format which SmugMug likes best.
-            const albumUrl = "https://theglovers.com/frame/slideshow?key=t7tB6X&autoStart=1&captions=0&navigation=1&playButton=0&randomize=1&speed=3&transition=fade&transitionSpeed=2";
-            
-            engineRoom.innerHTML = `<iframe src="${albumUrl}"></iframe>`;
-            engineRoom.style.display = "block";
-            
-            status.innerHTML = "Arrival Complete! View the itinerary below.";
-        }
-    </script>
+    <div id="monitor" class="monitor-frame">
+        <iframe src="https://www.theglovers.com/frame/slideshow?key=t7tB6X&autoStart=1&captions=0&navigation=0&playButton=0&randomize=1&speed=3&transition=fade"></iframe>
+    </div>
+
+    <p style="margin-top:20px; color:#555;"><i>Mechanical Handshake: Confirmed via Custom Domain</i></p>
+
 </body>
 </html>
