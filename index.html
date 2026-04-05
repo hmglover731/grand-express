@@ -12,90 +12,81 @@
         
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: 'Georgia', serif; }
 
-        /* LAYER 1: THE SCENERY (The Background) */
+        /* LAYER 1: THE BACKGROUND SCENERY */
         #scenery {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-size: cover; background-position: center;
             transition: background-image 3s ease-in-out; z-index: 1;
         }
 
-        /* LAYER 2: THE SMUGMUG SLIDESHOW */
-        .window-content {
+        /* LAYER 2: THE SMUGMUG SLIDESHOW (The Window Glass) */
+        .window-glass {
             position: absolute; 
-            top: 18%; left: 15%; width: 70%; height: 50%;
-            z-index: 2; background: #000;
+            top: 20%; left: 12%; width: 76%; height: 50%;
+            z-index: 5; background: #000;
+            border: 8px solid var(--mahogany);
+            outline: 2px solid var(--brass);
+            box-shadow: 0 0 100px #000;
+            border-radius: 4px; overflow: hidden;
         }
-        iframe { width: 100%; height: 100%; border: none; }
+        /* Forces the SmugMug frame to fill the entire window */
+        iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* LAYER 3: THE WALL WITH A HOLE PUNCHED IN IT */
-        .cabin-walls {
+        /* LAYER 3: THE CABIN WALLS (The brown area) */
+        .cabin-interior {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; pointer-events: none;
-            /* This complex gradient creates the solid wall AND the hole */
-            background: 
-                linear-gradient(to bottom, var(--panel), #000);
-            /* This 'mask' creates the transparent window hole */
-            mask-image: radial-gradient(circle, transparent 100%, black 100%); /* Fallback */
-            -webkit-mask: 
-                conic-gradient(from 180deg at 15% 18%, #0000 25%, #000 0) 0 0/100% 100%,
-                conic-gradient(from 0deg at 85% 68%, #0000 25%, #000 0) 0 0/100% 100%;
-            /* Simpler approach: a cutout using clip-path */
-            clip-path: polygon(0% 0%, 0% 100%, 15% 100%, 15% 18%, 85% 18%, 85% 68%, 15% 68%, 15% 100%, 100% 100%, 100% 0%);
+            background: radial-gradient(circle at 50% 45%, transparent 30%, rgba(0,0,0,0.85) 90%),
+                        linear-gradient(to bottom, var(--panel), #000);
+            /* This 'clips' the middle out so we can see the window glass */
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 12% 20%, 12% 70%, 88% 70%, 88% 20%, 12% 20%);
         }
 
-        /* LAYER 4: THE WINDOW TRIM (The Brass Frame) */
-        .window-frame {
-            position: absolute; top: 18%; left: 15%; width: 70%; height: 50%;
-            z-index: 11; pointer-events: none;
-            border: 12px solid var(--mahogany);
-            outline: 2px solid var(--brass);
-            box-shadow: inset 0 0 40px #000, 0 0 100px rgba(0,0,0,1);
-            border-radius: 4px;
-        }
-
-        /* LAYER 5: THE CURTAINS */
+        /* LAYER 4: THE CURTAINS */
         .curtain {
-            position: fixed; top: 0; height: 75vh; width: 18vw; z-index: 12;
+            position: fixed; top: 0; height: 80vh; width: 18vw; z-index: 15;
             background: linear-gradient(90deg, #400 0%, #800 20%, #400 40%, #800 60%, #400 80%, #800 100%);
             border-bottom: 5px solid var(--brass);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.8);
         }
-        .curtain-l { left: 0; border-right: 2px solid var(--brass); border-radius: 0 0 100% 0; }
-        .curtain-r { right: 0; border-left: 2px solid var(--brass); border-radius: 0 0 0 100%; }
+        .curtain-l { left: 0; border-right: 2px solid var(--brass); border-radius: 0 0 120px 0; }
+        .curtain-r { right: 0; border-left: 2px solid var(--brass); border-radius: 0 0 0 120px; }
 
-        /* TEXT & CONTROLS */
+        /* TEXT PANEL */
         .header {
-            position: fixed; top: 30px; width: 100%; text-align: center;
+            position: fixed; top: 5vh; width: 100%; text-align: center;
             color: var(--brass); text-shadow: 2px 2px 20px #000; z-index: 20;
         }
-        #station-display { font-size: 3.5rem; margin: 0; letter-spacing: 10px; text-transform: uppercase; font-weight: bold; }
-        #date-display { font-size: 1.4rem; color: #fff; opacity: 0.8; margin-top: 5px; }
+        #station-display { font-size: 3.5rem; margin: 0; letter-spacing: 12px; text-transform: uppercase; font-weight: bold; }
+        #date-display { font-size: 1.4rem; color: #fff; opacity: 0.8; margin-top: 5px; letter-spacing: 4px; }
 
+        /* CONTROLS */
         .footer {
-            position: fixed; bottom: 0; width: 100%; height: 28%;
+            position: fixed; bottom: 0; width: 100%; height: 25%;
             background: linear-gradient(to bottom, #1a0f0d, #000);
-            border-top: 6px solid var(--mahogany);
+            border-top: 5px solid var(--mahogany);
             z-index: 20; display: flex; align-items: center; justify-content: center;
         }
         button { 
             background: linear-gradient(180deg, #d4a017 0%, #8a680e 100%);
-            color: #1a0f0d; border: 1px solid #000; padding: 18px 45px; 
-            font-weight: bold; cursor: pointer; border-radius: 4px; 
+            color: #1a0f0d; border: 1px solid #000; 
+            padding: 16px 40px; font-weight: bold; cursor: pointer; border-radius: 4px; 
             font-family: 'Georgia', serif; text-transform: uppercase;
             box-shadow: 0 5px 0 #5e460a, 0 10px 25px rgba(0,0,0,0.8);
-            margin: 0 20px;
+            margin: 0 20px; transition: 0.1s;
         }
+        button:active { transform: translateY(4px); box-shadow: 0 1px 0 #5e460a; }
     </style>
 </head>
 <body>
 
     <div id="scenery"></div>
+    <div class="cabin-interior"></div>
     
-    <div class="window-content">
+    <div class="window-glass">
         <iframe id="smugmug-frame" src=""></iframe>
     </div>
 
-    <div class="cabin-walls"></div>
-    <div class="window-frame"></div>
     <div class="curtain curtain-l"></div>
     <div class="curtain curtain-r"></div>
 
@@ -133,8 +124,13 @@
             const s = route[cursor];
             document.getElementById('station-display').innerText = s.name;
             document.getElementById('date-display').innerText = s.date;
-            document.getElementById('scenery').style.backgroundImage = "url('" + s.bg + "')";
-            document.getElementById('smugmug-frame').src = "https://www.theglovers.com/frame/slideshow?key=" + s.key + "&autoStart=1&randomize=1&speed=5";
+            
+            // Scenery (Background)
+            document.getElementById('scenery').style.backgroundImage = `url('${s.bg}')`;
+            
+            // SmugMug (Foreground Window)
+            // Added "&autoStart=1" to make sure it plays immediately
+            document.getElementById('smugmug-frame').src = `https://www.theglovers.com/frame/slideshow?key=${s.key}&autoStart=1&randomize=1&speed=5`;
         }
 
         function startTimer() {
