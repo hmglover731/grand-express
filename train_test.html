@@ -7,8 +7,8 @@
         body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
         #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
         img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; border: 2px solid #d4a017; background: #222; }
-        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; font-weight: bold; color: black; border-radius: 5px; border: none; }
-        #status { margin: 20px; color: #888; }
+        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; border: none; font-weight: bold; color: black; border-radius: 5px; }
+        #status { margin: 20px; color: #888; font-style: italic; }
     </style>
 </head>
 <body>
@@ -20,18 +20,19 @@
     <div id="gallery"></div>
 
     <script>
+        // No API Key needed for RSS feeds
         const ALBUM_KEY = 't7tB6X';
 
         async function loadStationPhotos() {
             const status = document.getElementById('status');
             const gallery = document.getElementById('gallery');
-            status.innerHTML = "Signal sent... waiting for images.";
+            status.innerHTML = "Signal sent... bypassing security walls.";
             gallery.innerHTML = "";
 
-            // We use the RSS Feed link - this bypasses API keys and CORS/ORB blocks
+            // 1. SmugMug's Public Feed URL
             const rssUrl = `https://www.smugmug.com/hack/feed.mg?Type=album&Data=${ALBUM_KEY}&format=rss20`;
             
-            // We use a public 'RSS to JSON' converter so the browser doesn't freak out
+            // 2. A public converter that 'cleans' the data so the browser allows it
             const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
             try {
@@ -44,17 +45,17 @@
                     
                     photos.forEach(item => {
                         const img = document.createElement('img');
-                        // RSS feeds store the photo link in the 'enclosure' or 'description'
-                        img.src = item.enclosure.link || item.guid;
+                        // RSS feeds usually put the high-res image in 'enclosure' or 'guid'
+                        img.src = item.enclosure.link || item.guid || item.link;
                         gallery.appendChild(img);
                     });
-                    status.innerHTML = "Arrival Complete!";
+                    status.innerHTML = "Arrival Complete! Images loaded.";
                 } else {
-                    status.innerHTML = "Connected, but no photos found. Is the album Public?";
+                    status.innerHTML = "Connected, but no photos found. <br><b>CRITICAL:</b> Set SmugMug Album to 'PUBLIC' (not Unlisted).";
                 }
             } catch (err) {
                 console.error(err);
-                status.innerHTML = "System Failure. Please ensure SmugMug album is Public.";
+                status.innerHTML = "System Failure. Check browser console (F12).";
             }
         }
     </script>
