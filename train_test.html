@@ -2,65 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grand Express: Final Handshake</title>
+    <title>Grand Express: The Final Engine</title>
     <style>
         body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
-        #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
-        img { width: 100%; height: 200px; object-fit: cover; border: 2px solid #d4a017; border-radius: 10px; background: #222; }
-        button { padding: 20px 40px; font-size: 20px; background: #d4a017; font-weight: bold; cursor: pointer; color: black; border: none; border-radius: 8px; }
-        #status { margin: 20px; color: #888; font-style: italic; }
+        #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+        img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; border: 2px solid #d4a017; background: #222; }
+        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; font-weight: bold; color: black; border-radius: 5px; border: none; }
+        #status { margin: 20px; color: #888; }
     </style>
 </head>
 <body>
 
     <h1>The Grand Express</h1>
-    <button onclick="igniteEngine()">ARRIVE AT STATION</button>
-    <div id="status">Ready for Departure.</div>
+    <p>Station: <strong>t7tB6X</strong></p>
+    <button onclick="loadStationPhotos()">ARRIVE AT STATION</button>
+    <div id="status">Ready.</div>
     <div id="gallery"></div>
 
     <script>
-        // 1. YOUR ACTUAL DATA
-        const KEY = 'RbBLZqzrMNpqhXhJnHGFQpPzHDGTzS9h';
-        const ALBUM = 't7tB6X';
+        const ALBUM_KEY = 't7tB6X';
 
-        // 2. THE LANDING PAD (Must be defined on 'window' to be visible)
-        window.processSmugMugData = function(data) {
-            console.log("Mechanical Handshake Success!");
-            const gallery = document.getElementById('gallery');
+        async function loadStationPhotos() {
             const status = document.getElementById('status');
+            const gallery = document.getElementById('gallery');
+            status.innerHTML = "Signal sent... waiting for images.";
+            gallery.innerHTML = "";
 
-            if (data && data.Response && data.Response.AlbumImage) {
-                const images = data.Response.AlbumImage;
-                gallery.innerHTML = "";
-                
-                // Shuffle and pick 6
-                images.sort(() => 0.5 - Math.random()).slice(0, 6).forEach(img => {
-                    const i = document.createElement('img');
-                    // SmugMug's direct URL for the image
-                    i.src = img.ArchivedUri || img.Uri;
-                    gallery.appendChild(i);
-                });
-                status.innerHTML = "Arrival Complete! The engine is running.";
-            } else {
-                status.innerHTML = "Connected, but no photos found. Check SmugMug Privacy settings for album t7tB6X.";
+            // We use the RSS Feed link - this bypasses API keys and CORS/ORB blocks
+            const rssUrl = `https://www.smugmug.com/hack/feed.mg?Type=album&Data=${ALBUM_KEY}&format=rss20`;
+            
+            // We use a public 'RSS to JSON' converter so the browser doesn't freak out
+            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    // Randomize and take 6
+                    const photos = data.items.sort(() => 0.5 - Math.random()).slice(0, 6);
+                    
+                    photos.forEach(item => {
+                        const img = document.createElement('img');
+                        // RSS feeds store the photo link in the 'enclosure' or 'description'
+                        img.src = item.enclosure.link || item.guid;
+                        gallery.appendChild(img);
+                    });
+                    status.innerHTML = "Arrival Complete!";
+                } else {
+                    status.innerHTML = "Connected, but no photos found. Is the album Public?";
+                }
+            } catch (err) {
+                console.error(err);
+                status.innerHTML = "System Failure. Please ensure SmugMug album is Public.";
             }
-        };
-
-        // 3. THE TRIGGER
-        function igniteEngine() {
-            document.getElementById('status').innerHTML = "Chugging to SmugMug via JSONP...";
-            
-            // Clean up old scripts
-            const old = document.getElementById('smug-loader');
-            if (old) old.remove();
-
-            const script = document.createElement('script');
-            script.id = 'smug-loader';
-            
-            // This URL tells SmugMug: "Wrap the data in processSmugMugData()"
-            script.src = `https://api.smugmug.com/api/v2/album/${ALBUM}!images?APIKey=${KEY}&_jsonp=processSmugMugData`;
-            
-            document.head.appendChild(script);
         }
     </script>
 </body>
