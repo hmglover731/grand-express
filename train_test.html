@@ -2,61 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grand Express: Proxy Engine</title>
+    <title>Grand Express: Industrial Engine</title>
     <style>
         body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
-        #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
-        img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; border: 2px solid #d4a017; background: #222; }
-        button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; border: none; font-weight: bold; color: black; border-radius: 5px; }
-        #status { margin: 20px; color: #888; font-style: italic; }
+        #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
+        img { width: 100%; height: 200px; object-fit: cover; border: 2px solid #d4a017; border-radius: 10px; }
+        button { padding: 20px; font-size: 20px; background: #d4a017; font-weight: bold; cursor: pointer; color: black; border: none; }
+        #status { margin: 20px; color: #888; }
     </style>
 </head>
 <body>
 
-    <h1>Grand Express: Proxy Test</h1>
-    <button onclick="loadWithProxy()">Arrive at Station</button>
+    <h1>Grand Express: Industrial Test</h1>
+    <button onclick="loadImages()">ARRIVE AT STATION</button>
     <div id="status">Ready.</div>
     <div id="gallery"></div>
 
     <script>
-        const API_KEY = 'RbBLZqzrMNpqhXhJnHGFQpPzHDGTzS9h';
+        const KEY = 'RbBLZqzrMNpqhXhJnHGFQpPzHDGTzS9h';
         const ALBUM = 't7tB6X';
 
-        async function loadWithProxy() {
+        async function loadImages() {
             const status = document.getElementById('status');
             const gallery = document.getElementById('gallery');
-            status.innerHTML = "Crossing the Bridge to SmugMug...";
+            status.innerHTML = "Opening the industrial bridge...";
             gallery.innerHTML = "";
 
-            // This bridge (AllOrigins) fixes the 'ERR_BLOCKED_BY_ORB' error
-            const smugmugUrl = `https://api.smugmug.com/api/v2/album/${ALBUM}!images?APIKey=${API_KEY}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(smugmugUrl)}`;
+            // This is the most powerful bridge available
+            const proxy = 'https://cors-anywhere.herokuapp.com/';
+            const target = `https://api.smugmug.com/api/v2/album/${ALBUM}!images?APIKey=${KEY}`;
 
             try {
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error("Proxy connection failed.");
-                
-                const wrapper = await response.json();
-                // AllOrigins wraps the SmugMug data inside a 'contents' string
-                const data = JSON.parse(wrapper.contents); 
+                const response = await fetch(proxy + target, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
 
-                if (data.Response && data.Response.AlbumImage) {
-                    const images = data.Response.AlbumImage;
-                    images.sort(() => 0.5 - Math.random());
-                    
-                    images.slice(0, 6).forEach(img => {
-                        const i = document.createElement('img');
-                        // Using Medium size for reliability
-                        i.src = img.ImageSizeMedium || img.ArchivedUri || img.Uri;
-                        gallery.appendChild(i);
-                    });
-                    status.innerHTML = "Arrival Complete! The Engine is running.";
-                } else {
-                    status.innerHTML = "Connected, but no images found in this album.";
-                }
+                if (!response.ok) throw new Error("Bridge denied access. Did you click the 'Request Access' link?");
+
+                const data = await response.json();
+                const images = data.Response.AlbumImage;
+
+                images.sort(() => 0.5 - Math.random());
+                images.slice(0, 6).forEach(img => {
+                    const i = document.createElement('img');
+                    // We use the direct web link SmugMug provides
+                    i.src = img.ArchivedUri || img.Uri;
+                    gallery.appendChild(i);
+                });
+                status.innerHTML = "SUCCESS! The engine is live.";
+
             } catch (err) {
                 console.error(err);
-                status.innerHTML = "Bridge Error. Check console (F12).";
+                status.innerHTML = "STOPPED. <br>Please visit <a href='https://cors-anywhere.herokuapp.com/corsdemo' target='_blank' style='color:yellow;'>THIS LINK</a> and click 'Request Access', then try again.";
             }
         }
     </script>
