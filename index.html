@@ -7,88 +7,83 @@
         :root { 
             --brass: #d4a017; 
             --mahogany: #2c1e1a;
-            --shadow: rgba(0,0,0,0.9);
+            --overlay: rgba(0,0,0,0.5);
         }
 
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Georgia', serif; }
 
-        /* LAYER 1: BACKGROUND SCENERY */
+        /* LAYER 1: THE FULL-SCREEN POSTCARD */
         #main-background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center;
             transition: background-image 2s ease-in-out; z-index: 1;
         }
 
-        /* LAYER 2: DARK OVERLAY */
-        .interior-wash {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        /* LAYER 2: THE MAIN INTERFACE CONTAINER */
+        .ui-wrapper {
+            position: relative; z-index: 10;
+            height: 100vh; width: 100vw;
+            display: flex; flex-direction: column;
+            justify-content: space-between; /* Pushes Top to top and Bottom to bottom */
+            align-items: center;
+            background: var(--overlay);
+            padding: 40px 0;
+            box-sizing: border-box;
         }
 
-        /* NEW TOP DISPLAY: DATE & DESTINATION */
-        .top-itinerary {
-            z-index: 50;
-            color: var(--brass);
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 3px 3px 5px #000;
-        }
-        #current-date { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 5px; opacity: 0.9; }
-        #station-display { font-size: 2.5rem; text-transform: uppercase; letter-spacing: 8px; font-weight: bold; }
+        /* TOP SECTION: DATE & DESTINATION */
+        .header-display { text-align: center; color: var(--brass); text-shadow: 3px 3px 6px #000; }
+        #current-date { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; }
+        #station-display { font-size: 3rem; font-weight: bold; letter-spacing: 10px; text-transform: uppercase; }
 
-        /* LAYER 3: THE MONITOR */
+        /* MIDDLE SECTION: THE WINDOW */
         .window-monitor {
-            width: 80%; max-width: 900px; height: 480px;
-            border: 18px solid var(--mahogany); 
-            border-bottom: 30px solid #1a110f; 
-            border-radius: 40px; background: #000;
-            box-shadow: 0 50px 100px #000;
-            overflow: hidden; position: relative; z-index: 10;
+            width: 85%; max-width: 950px; height: 500px;
+            border: 20px solid var(--mahogany); 
+            border-bottom: 35px solid #1a110f; 
+            border-radius: 45px; background: #000;
+            box-shadow: 0 40px 80px #000;
+            overflow: hidden;
         }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* LAYER 4: THE DASHBOARD (CONTROLS ONLY) */
-        .dashboard { 
-            margin-top: 30px; display: flex; gap: 40px; align-items: center; 
+        /* BOTTOM SECTION: CONTROLS */
+        .button-deck { 
+            display: flex; gap: 40px; align-items: center; 
             background: #111; padding: 15px 50px; border-radius: 100px; 
             border: 2px solid var(--brass); 
-            box-shadow: 0 0 20px rgba(212, 160, 23, 0.4);
-            z-index: 100;
-            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,1);
         }
-        
         button { 
             background: var(--brass); color: #000; border: 1px solid #000; 
             padding: 12px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; 
             font-family: 'Georgia', serif; text-transform: uppercase; font-size: 0.9rem;
-            transition: 0.3s;
         }
-        button:hover { background: #fff; transform: scale(1.05); }
+        button:hover { background: #fff; }
 
-        /* LAYER 5: THE TRACKS (SLOWED DOWN) */
-        .track-zone { 
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; 
-            background: #050505; border-top: 2px solid #333;
-            overflow: hidden; z-index: 5;
+        /* LAYER 3: THE TRACKS (AT THE VERY BOTTOM) */
+        .track-basement { 
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 50px; 
+            background: #080808; border-top: 2px solid #222;
+            overflow: hidden; z-index: 5; /* Behind the buttons, but visible at the bottom */
         }
-        .moving-rails { 
+        .rail-animation { 
             width: 200%; height: 100%; 
             background: 
-                repeating-linear-gradient(90deg, #221100 0px, #221100 20px, transparent 20px, transparent 120px),
-                linear-gradient(0deg, transparent 25%, #444 25%, #444 28%, transparent 28%, transparent 72%, #444 72%, #444 75%, transparent 75%);
-            animation: railwayBlur 4s linear infinite; /* Very slow leisurely pace */
+                repeating-linear-gradient(90deg, #221100 0px, #221100 20px, transparent 20px, transparent 150px),
+                linear-gradient(0deg, transparent 30%, #444 30%, #444 33%, transparent 33%, transparent 67%, #444 67%, #444 70%, transparent 70%);
+            animation: slowRoll 5s linear infinite; 
         }
-        @keyframes railwayBlur { from { transform: translateX(0); } to { transform: translateX(-120px); } }
+        @keyframes slowRoll { from { transform: translateX(0); } to { transform: translateX(-150px); } }
     </style>
 </head>
 <body>
 
     <div id="main-background"></div>
 
-    <div class="interior-wash">
-        <div class="top-itinerary">
-            <div id="current-date">-- -- ----</div>
+    <div class="ui-wrapper">
+        <div class="header-display">
+            <div id="current-date">Sunday, April 5, 2026</div>
             <div id="station-display">Connecting...</div>
         </div>
         
@@ -96,14 +91,14 @@
             <iframe id="smugmug-frame" src=""></iframe>
         </div>
 
-        <div class="dashboard">
-            <button onclick="navigate(-1)">PREVIOUS STATION</button>
+        <div class="button-deck">
+            <button onclick="navigate(-1)">PREVIOUS</button>
             <button onclick="handleAudio()">🔊 SOUND ON/OFF</button>
-            <button onclick="navigate(1)">NEXT STATION</button>
+            <button onclick="navigate(1)">NEXT</button>
         </div>
     </div>
 
-    <div class="track-zone"><div class="moving-rails"></div></div>
+    <div class="track-basement"><div class="rail-animation"></div></div>
 
     <audio id="ambient-noise" loop>
         <source src="train_sound.mp3" type="audio/mpeg">
@@ -114,7 +109,7 @@
         let cursor = 0;
         const player = document.getElementById('ambient-noise');
 
-        // Function to update the date at the top
+        // Force the date update immediately
         function updateDate() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -144,7 +139,6 @@
             player.paused ? player.play() : player.pause();
         }
 
-        // Keep the date updated if the page stays open
         setInterval(updateDate, 60000);
     </script>
 </body>
