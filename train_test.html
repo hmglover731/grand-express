@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grand Express: Engine Final</title>
+    <title>Grand Express: JSONP Engine</title>
     <style>
         :root { --gold: #d4a017; --bg: #1a1a1a; }
         body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; padding: 40px; }
@@ -22,28 +22,33 @@
     <div id="gallery"></div>
 
     <script>
+        // No 'async' or 'fetch' here anymore
         const apiKey = 'RbBLZqzrMNpqhXhJnHGFQpPzHDGTzS9h';
         const albumKey = 't7tB6X';
 
-        // MECHANICAL STEP 1: Create the request
         function pullImages() {
             const statusDiv = document.getElementById('status');
-            statusDiv.textContent = "Loading memories via JSONP...";
+            statusDiv.textContent = "Requesting photos via JSONP script...";
 
+            // Clean up any old script tags from previous clicks
             const oldScript = document.getElementById('smugmug-loader');
             if (oldScript) oldScript.remove();
 
+            // MECHANICAL STEP: Create a script element
             const script = document.createElement('script');
             script.id = 'smugmug-loader';
             
-            // This URL tells SmugMug: "Wrap the data in a function called handleResponse"
+            // This specific URL format tells SmugMug to bypass CORS 
+            // by wrapping the data in a function call.
             script.src = `https://api.smugmug.com/api/v2/album/${albumKey}!images?APIKey=${apiKey}&_jsonp=handleResponse`;
             
+            // Adding this to the page triggers the download immediately
             document.head.appendChild(script);
         }
 
-        // MECHANICAL STEP 2: Receive the data
+        // This is the 'Landing Pad' function that SmugMug calls
         window.handleResponse = function(data) {
+            console.log("Mechanical Success: Data arrived!");
             const galleryDiv = document.getElementById('gallery');
             const statusDiv = document.getElementById('status');
 
@@ -59,13 +64,12 @@
 
                 selected.forEach(img => {
                     const imgTag = document.createElement('img');
-                    // We use the direct image link provided by SmugMug
+                    // SmugMug provides the image link in 'ArchivedUri'
                     imgTag.src = img.ArchivedUri || img.Uri;
                     galleryDiv.appendChild(imgTag);
                 });
             } else {
-                statusDiv.textContent = "Error: Data received but no images found.";
-                console.log("SmugMug Data:", data);
+                statusDiv.textContent = "Error: Connected, but no images found.";
             }
         };
     </script>
