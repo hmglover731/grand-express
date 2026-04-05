@@ -2,61 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grand Express: The Final Engine</title>
+    <title>Grand Express: The Final Station</title>
     <style>
         body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
-        #gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
-        img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; border: 2px solid #d4a017; background: #222; }
+        .slideshow-container { 
+            width: 80%; 
+            max-width: 900px; 
+            height: 500px; 
+            margin: 20px auto; 
+            border: 4px solid #d4a017; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            background: #000;
+        }
+        iframe { width: 100%; height: 100%; border: none; }
         button { padding: 15px 35px; font-size: 18px; cursor: pointer; background: #d4a017; border: none; font-weight: bold; color: black; border-radius: 5px; }
-        #status { margin: 20px; color: #888; font-style: italic; }
+        #status { margin: 10px; color: #888; }
     </style>
 </head>
 <body>
 
     <h1>The Grand Express</h1>
     <p>Station: <strong>t7tB6X</strong></p>
-    <button onclick="loadStationPhotos()">ARRIVE AT STATION</button>
+    <button onclick="arriveAtStation()">ARRIVE AT STATION</button>
+    
     <div id="status">Ready.</div>
-    <div id="gallery"></div>
+    <div id="engine-room" class="slideshow-container" style="display:none;">
+        </div>
 
     <script>
-        // No API Key needed for RSS feeds
-        const ALBUM_KEY = 't7tB6X';
-
-        async function loadStationPhotos() {
+        function arriveAtStation() {
             const status = document.getElementById('status');
-            const gallery = document.getElementById('gallery');
-            status.innerHTML = "Signal sent... bypassing security walls.";
-            gallery.innerHTML = "";
-
-            // 1. SmugMug's Public Feed URL
-            const rssUrl = `https://www.smugmug.com/hack/feed.mg?Type=album&Data=${ALBUM_KEY}&format=rss20`;
+            const engineRoom = document.getElementById('engine-room');
             
-            // 2. A public converter that 'cleans' the data so the browser allows it
-            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-
-            try {
-                const response = await fetch(proxyUrl);
-                const data = await response.json();
-
-                if (data.items && data.items.length > 0) {
-                    // Randomize and take 6
-                    const photos = data.items.sort(() => 0.5 - Math.random()).slice(0, 6);
-                    
-                    photos.forEach(item => {
-                        const img = document.createElement('img');
-                        // RSS feeds usually put the high-res image in 'enclosure' or 'guid'
-                        img.src = item.enclosure.link || item.guid || item.link;
-                        gallery.appendChild(img);
-                    });
-                    status.innerHTML = "Arrival Complete! Images loaded.";
-                } else {
-                    status.innerHTML = "Connected, but no photos found. <br><b>CRITICAL:</b> Set SmugMug Album to 'PUBLIC' (not Unlisted).";
-                }
-            } catch (err) {
-                console.error(err);
-                status.innerHTML = "System Failure. Check browser console (F12).";
-            }
+            status.innerHTML = "Pulling into the station...";
+            
+            // We use your custom domain here! 
+            // We are using the 'Embed' format which SmugMug likes best.
+            const albumUrl = "https://theglovers.com/frame/slideshow?key=t7tB6X&autoStart=1&captions=0&navigation=1&playButton=0&randomize=1&speed=3&transition=fade&transitionSpeed=2";
+            
+            engineRoom.innerHTML = `<iframe src="${albumUrl}"></iframe>`;
+            engineRoom.style.display = "block";
+            
+            status.innerHTML = "Arrival Complete! View the itinerary below.";
         }
     </script>
 </body>
