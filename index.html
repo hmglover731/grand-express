@@ -5,82 +5,70 @@
     <title>The Grand Express</title>
     <style>
         :root { 
-            --brass: #d4a017; 
-            --mahogany: #1a0f0d; 
-            --panel: #2a1814;
+            /* New Sophisticated Palette */
+            --brass: #c5a059; 
+            --charcoal: #121212; 
+            --deep-panel: #1a1a1a;
+            --wine: #4a0e0e; /* Much darker, muted red */
         }
         
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: 'Georgia', serif; }
 
-        /* LAYER 1: THE BACKGROUND SCENERY */
-        #scenery {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-size: cover; background-position: center;
-            transition: background-image 3s ease-in-out; z-index: 1;
-        }
-
-        /* LAYER 2: THE SMUGMUG SLIDESHOW (The Window Glass) */
-        .window-glass {
-            position: absolute; 
-            top: 20%; left: 12%; width: 76%; height: 50%;
-            z-index: 5; background: #000;
-            border: 8px solid var(--mahogany);
-            outline: 2px solid var(--brass);
-            box-shadow: 0 0 100px #000;
-            border-radius: 4px; overflow: hidden;
-        }
-        /* Forces the SmugMug frame to fill the entire window */
-        iframe { width: 100%; height: 100%; border: none; display: block; }
-
-        /* LAYER 3: THE CABIN WALLS (The brown area) */
+        /* THE ROOM INTERIOR (Replacing the brown) */
         .cabin-interior {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; pointer-events: none;
-            background: radial-gradient(circle at 50% 45%, transparent 30%, rgba(0,0,0,0.85) 90%),
-                        linear-gradient(to bottom, var(--panel), #000);
-            /* This 'clips' the middle out so we can see the window glass */
+            /* Using a metallic/charcoal gradient instead of brown */
+            background: radial-gradient(circle at 50% 45%, transparent 35%, rgba(0,0,0,0.9) 95%),
+                        linear-gradient(135deg, var(--deep-panel) 0%, #000 100%);
             clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 12% 20%, 12% 70%, 88% 70%, 88% 20%, 12% 20%);
         }
 
-        /* LAYER 4: THE CURTAINS */
-        .curtain {
-            position: fixed; top: 0; height: 80vh; width: 18vw; z-index: 15;
-            background: linear-gradient(90deg, #400 0%, #800 20%, #400 40%, #800 60%, #400 80%, #800 100%);
-            border-bottom: 5px solid var(--brass);
-            box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+        /* THE PHOTO WINDOW */
+        .window-glass {
+            position: absolute; top: 20%; left: 12%; width: 76%; height: 50%;
+            z-index: 5; background: #000;
+            border: 8px solid #0a0a0a;
+            outline: 1px solid var(--brass);
+            box-shadow: 0 0 120px rgba(0,0,0,1);
         }
-        .curtain-l { left: 0; border-right: 2px solid var(--brass); border-radius: 0 0 120px 0; }
-        .curtain-r { right: 0; border-left: 2px solid var(--brass); border-radius: 0 0 0 120px; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* TEXT PANEL */
+        /* THE MUTED CURTAINS (Softened and Darkened) */
+        .curtain {
+            position: fixed; top: 0; height: 75vh; width: 15vw; z-index: 15;
+            background: linear-gradient(90deg, #1a0505 0%, var(--wine) 50%, #1a0505 100%);
+            border-bottom: 3px solid var(--brass);
+            opacity: 0.9;
+        }
+        .curtain-l { left: 0; border-right: 1px solid rgba(197, 160, 89, 0.3); border-radius: 0 0 60px 0; }
+        .curtain-r { right: 0; border-left: 1px solid rgba(197, 160, 89, 0.3); border-radius: 0 0 0 60px; }
+
+        /* ELEGANT TYPOGRAPHY */
         .header {
             position: fixed; top: 5vh; width: 100%; text-align: center;
-            color: var(--brass); text-shadow: 2px 2px 20px #000; z-index: 20;
+            color: var(--brass); text-shadow: 0 0 30px #000; z-index: 20;
         }
-        #station-display { font-size: 3.5rem; margin: 0; letter-spacing: 12px; text-transform: uppercase; font-weight: bold; }
-        #date-display { font-size: 1.4rem; color: #fff; opacity: 0.8; margin-top: 5px; letter-spacing: 4px; }
+        #station-display { font-size: 4rem; margin: 0; letter-spacing: 15px; text-transform: uppercase; font-weight: normal; font-style: italic; }
+        #date-display { font-size: 1.2rem; color: #888; letter-spacing: 6px; margin-top: 10px; text-transform: uppercase; }
 
-        /* CONTROLS */
+        /* THE FOOTER CONSOLE */
         .footer {
             position: fixed; bottom: 0; width: 100%; height: 25%;
-            background: linear-gradient(to bottom, #1a0f0d, #000);
-            border-top: 5px solid var(--mahogany);
+            background: #080808; border-top: 2px solid #1a1a1a;
             z-index: 20; display: flex; align-items: center; justify-content: center;
         }
         button { 
-            background: linear-gradient(180deg, #d4a017 0%, #8a680e 100%);
-            color: #1a0f0d; border: 1px solid #000; 
-            padding: 16px 40px; font-weight: bold; cursor: pointer; border-radius: 4px; 
-            font-family: 'Georgia', serif; text-transform: uppercase;
-            box-shadow: 0 5px 0 #5e460a, 0 10px 25px rgba(0,0,0,0.8);
-            margin: 0 20px; transition: 0.1s;
+            background: none; color: var(--brass); border: 1px solid var(--brass); 
+            padding: 14px 40px; font-weight: bold; cursor: pointer; border-radius: 2px; 
+            font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 3px;
+            transition: 0.4s;
         }
-        button:active { transform: translateY(4px); box-shadow: 0 1px 0 #5e460a; }
+        button:hover { background: var(--brass); color: #000; box-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
     </style>
 </head>
 <body>
 
-    <div id="scenery"></div>
     <div class="cabin-interior"></div>
     
     <div class="window-glass">
@@ -91,14 +79,14 @@
     <div class="curtain curtain-r"></div>
 
     <div class="header">
-        <h1 id="station-display">BOARDING...</h1>
-        <div id="date-display">MANAGING MANIFEST</div>
+        <h1 id="station-display">Loading...</h1>
+        <div id="date-display">Passenger Manifest</div>
     </div>
 
     <div class="footer">
-        <button onclick="navigate(-1)">PREVIOUS</button>
-        <button onclick="handleAudio()">🔊 SOUND</button>
-        <button onclick="navigate(1)">NEXT</button>
+        <button onclick="navigate(-1)">Prev</button>
+        <button style="margin: 0 30px;" onclick="handleAudio()">Ambient Audio</button>
+        <button onclick="navigate(1)">Next</button>
     </div>
 
     <audio id="ambient-noise" loop>
@@ -124,12 +112,6 @@
             const s = route[cursor];
             document.getElementById('station-display').innerText = s.name;
             document.getElementById('date-display').innerText = s.date;
-            
-            // Scenery (Background)
-            document.getElementById('scenery').style.backgroundImage = `url('${s.bg}')`;
-            
-            // SmugMug (Foreground Window)
-            // Added "&autoStart=1" to make sure it plays immediately
             document.getElementById('smugmug-frame').src = `https://www.theglovers.com/frame/slideshow?key=${s.key}&autoStart=1&randomize=1&speed=5`;
         }
 
