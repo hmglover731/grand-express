@@ -1,0 +1,12 @@
+[
+  { 
+    "name": "San Francisco", 
+    "key": "t7tB6X", 
+    "bg": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=2000&auto=format&fit=crop" 
+  },
+  { 
+    "name": "Hawaii", 
+    "key": "YOUR_HAWAII_KEY", 
+    "bg": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop" 
+  }
+]
