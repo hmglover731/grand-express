@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Express: Photo Engine</title>
+    <style>
+        :root { --gold: #d4a017; --bg: #1a1a1a; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 40px; }
+        
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        #gallery { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            margin-top: 30px; 
+        }
+
+        img { 
+            width: 100%; 
+            height: 300px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 2px solid #333;
+            transition: transform 0.3s ease;
+        }
+        
+        img:hover { transform: scale(1.02); border-color: var(--gold); }
+
+        button { 
+            padding: 18px 40px; 
+            font-size: 20px; 
+            cursor: pointer; 
+            background: var(--gold); 
+            border: none; 
+            border-radius: 8px; 
+            color: black; 
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        button:active { transform: translateY(2px); }
+
+        #status { margin: 20px; color: #888; font-size: 1.1em; height: 1.5em; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>The Grand Express</h1>
+        <p>Current Station: <strong>t7tB6X</strong></p>
+
+        <button onclick="arriveAtStation()">Arrive at Station</button>
+        
+        <div id="status">Ready for departure.</div>
+        <div id="gallery"></div>
+    </div>
+
+    <script>
+        // CONFIGURATION
+        const CONFIG = {
+            apiKey: 'RbBLZqzrMNpqhXhJnHGFQpPzHDGTzS9h',
+            albumKey: 't7tB6X',
+            photosToDisplay: 6
+        };
+
+        async function arriveAtStation() {
+            const statusDiv = document.getElementById('status');
+            const galleryDiv = document.getElementById('gallery');
+            
+            statusDiv.textContent = "Pulling into station...";
+            galleryDiv.innerHTML = "";
+
+            const endpoint = `https://api.smugmug.com/api/v2/album/${CONFIG.albumKey}!images?APIKey=${CONFIG.apiKey}`;
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!response.ok) throw new Error(`Status: ${response.status}`);
+
+                const data = await response.json();
+                const images = data.Response.AlbumImage;
+
+                if (!images || images.length === 0) {
+                    statusDiv.textContent = "Station is empty (No images found).";
+                    return;
+                }
+
+                // Shuffle and Pick
+                const selected = images
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, CONFIG.photosToDisplay);
+
+                statusDiv.textContent = `Arrived. Displaying ${selected.length} random memories.`;
+
+                selected.forEach(img => {
+                    const imgTag = document.createElement('img');
+                    // Fallback chain: Archived (Original) -> Medium -> Standard Uri
+                    imgTag.src = img.ArchivedUri || img.ImageSizeMedium || img.Uri;
+                    galleryDiv.appendChild(imgTag);
+                });
+
+            } catch (err) {
+                console.error("Engine Failure:", err);
+                statusDiv.innerHTML = "Connection Error. Ensure this is running on GitHub Pages (HTTPS).";
+            }
+        }
+    </script>
+</body>
+</html>
