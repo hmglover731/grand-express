@@ -1,14 +1,14 @@
 [
   { 
-    "name": "New York City",
-    "date": "August 7, 2007", 
-    "key": "t7tB6X", 
-    "bg": "https://photos.smugmug.com/Travel/Vacations/2010/Philadelphia-2010/i-5h7HD4D/0/MMZGbzhvrZ9GFzZpdH7tMZGmbQ24b2qvSxMCdzczd/X3/AdobeOLS-X3.jpg"
+    "name": "New York",
+    "date": "October 14, 1945", 
+    "key": "t7tB6X",
+    "bg": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=2000&auto=format&fit=crop" 
   },
   { 
     "name": "Philadelphia",
     "date": "April 4, 2010", 
-    "key": "Zxw6k8", 
-    "bg": "https://photos.smugmug.com/Travel/Vacations/2010/Philadelphia-2010/i-5h7HD4D/0/MMZGbzhvrZ9GFzZpdH7tMZGmbQ24b2qvSxMCdzczd/X3/AdobeOLS-X3.jpg"
+    "key": "Zxw6k8",
+    "bg": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop" 
   }
 ]
